@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: tender_management
+  datasource:
+    url: jdbc:postgresql://localhost:5432/tender_db
+    username: postgres
+    password: Test@123
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+  jwt:
+    secret: SzLIGmCmIIF9xJFLRtiA2cFdBMMyiCpkHTstO7Lk9zAYGR+h+G/4wSmk5EFnccoUOuczPEx962QJ/3ihVIGA9A==
