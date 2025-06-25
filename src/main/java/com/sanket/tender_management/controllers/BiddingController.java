@@ -37,22 +37,22 @@ public class BiddingController {
         return ResponseEntity.ok(biddings.stream().map(biddingMapper::toDto).toList());
     }
 
-    @PatchMapping("/update/{biddingId}")
-    public BiddingResponse updateBiddingStatus(@PathVariable Integer biddingId, @RequestBody BiddingStatusUpdateRequest request) {
-        var bidding = biddingRepository.findByBiddingId(biddingId).orElseThrow();
+    @PatchMapping("/update/{id}")
+    public BiddingResponse updateBiddingStatus(@PathVariable Integer id, @RequestBody BiddingStatusUpdateRequest request) {
+        var bidding = biddingRepository.findById(id).orElseThrow();
         bidding.setStatus(request.getStatus());
         biddingRepository.save(bidding);
         return biddingMapper.toDto(bidding);
     }
 
-    @DeleteMapping("/delete/{biddingId}")
-    public ResponseEntity<String> deleteBidding(@PathVariable Integer biddingId) {
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteBidding(@PathVariable Integer id) {
         var currentUser = authService.getCurrentUser();
-        var bidding = biddingRepository.findByBiddingId(biddingId).orElse(null);
+        var bidding = biddingRepository.findById(id).orElse(null);
         if (bidding == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("not found");
         }
-        if (!currentUser.isApprover() && !currentUser.getId().equals(bidding.getBidder().getId())) {
+        if (!currentUser.isApprover() && !currentUser.getId().equals(bidding.getBidderId())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("you don't have permission");
         }
         biddingRepository.delete(bidding);

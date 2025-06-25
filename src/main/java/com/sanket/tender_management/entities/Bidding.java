@@ -25,7 +25,7 @@ public class Bidding {
 
     private LocalDate dateOfBidding;
 
-    private String status;
+    private String status = "pending";
 
     @ManyToOne()
     @JoinColumn(name = "bidder_id")
@@ -36,7 +36,10 @@ public class Bidding {
         this.bidAmount = bidAmount;
         this.yearsToComplete = yearsToComplete;
         this.dateOfBidding = LocalDate.now();
-        this.status = "pending";
         this.bidder = bidder;
+    }
+
+    public Integer getBidderId() {
+        return bidder.getId();
     }
 }

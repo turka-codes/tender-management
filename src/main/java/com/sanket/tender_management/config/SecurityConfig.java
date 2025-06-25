@@ -53,11 +53,16 @@ public class SecurityConfig {
                 .authorizeHttpRequests(c -> c
                     .requestMatchers(HttpMethod.POST, "/login").permitAll()
                     .requestMatchers(HttpMethod.POST, "/bidding/add").hasRole("BIDDER")
-                    .requestMatchers(HttpMethod.PATCH, "/bidding/update/{id}").hasRole("APPROVER")
+                    .requestMatchers(HttpMethod.PATCH, "/bidding/update/*").hasRole("APPROVER")
                     .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling(c -> c.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.BAD_REQUEST)));
+                .exceptionHandling(c -> {
+                    c.authenticationEntryPoint(
+                        new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
+                    c.accessDeniedHandler(((request, response, accessDeniedException) ->
+                        response.setStatus(HttpStatus.FORBIDDEN.value())));
+                });
 
         return http.build();
     }
